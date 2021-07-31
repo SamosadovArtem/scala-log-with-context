@@ -1,18 +1,22 @@
 package com.log.example
 
-import cats.Functor
+import cats.Monad
 import cats.syntax.all._
-import com.log.example.CustomLogger.ContextLogOf
+import com.evolutiongaming.catshelper.LogOf
+import com.log.example.ContextLogger._
+import com.log.example.ContextLoggerInstances._
 
 trait TestService[F[_]] {
   def logMessage()(implicit ev: ContextLogOf[F]): F[Unit]
 }
 
 object TestService {
-  def of[F[_]: LogWithCtxOf: Functor]: F[TestService[F]] = {
-    LogWithCtxOf.summon[F].apply(getClass).map { logWithCtx =>
+  def of[F[_]: LogOf: Monad]: F[TestService[F]] = {
+    LogOf[F].apply(getClass).map { logger =>
       new TestService[F] {
-        override def logMessage()(implicit ev: ContextLogOf[F]): F[Unit] = logWithCtx.debug("Message")
+        override def logMessage()(implicit ev: ContextLogOf[F]): F[Unit] = {
+          logger.debugWitchCtx("Message")
+        }
       }
     }
   }

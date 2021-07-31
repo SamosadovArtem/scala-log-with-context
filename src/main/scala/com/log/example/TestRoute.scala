@@ -2,7 +2,7 @@ package com.log.example
 
 import cats.Monad
 import cats.implicits._
-import com.log.example.CustomLogger.{ContextLogOf, LogContext}
+import com.log.example.ContextLogger.{ContextLogOf, LogContext}
 import org.http4s.HttpRoutes
 import org.http4s.dsl.Http4sDsl
 import org.typelevel.ci._
